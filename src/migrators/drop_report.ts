@@ -1,13 +1,10 @@
 import { Migrator } from "."
 import { MItemDropModel } from "../models/mongo/item_drop_v2"
-import { PItem } from "../models/postgresql/item"
 import crypto from 'crypto'
 import { PDropPattern } from "../models/postgresql/drop_pattern"
 import { PDropPatternElement } from "../models/postgresql/drop_pattern_element"
 import { PDropReport } from "../models/postgresql/drop_report"
-import { PStage } from "../models/postgresql/stage"
 import { cache } from "../utils/cache"
-import { ConnectionCreatedEvent } from "mongoose/node_modules/mongodb"
 
 const sha256 = (str: string): string => {
   const h = crypto.createHash('sha256')
