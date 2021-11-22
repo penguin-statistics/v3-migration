@@ -6,6 +6,7 @@ import { PDropPatternElement } from "./models/postgresql/drop_pattern_element";
 import { PDropReport } from "./models/postgresql/drop_report";
 import { PItem } from "./models/postgresql/item";
 import { PNotice } from "./models/postgresql/notice";
+import { PProperty } from "./models/postgresql/property";
 import { PStage } from "./models/postgresql/stage";
 import { PZone } from "./models/postgresql/zone";
 import sequelize from "./utils/postgresql";
@@ -24,6 +25,7 @@ async function init() {
   await PDropReport.sync({ force: true });
   await PDropPatternElement.sync({ force: true });
   await PNotice.sync({ force: true });
+  await PProperty.sync({ force: true });
 
   await migrate();
 }
