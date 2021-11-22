@@ -1,5 +1,6 @@
 import { mongoose } from "@typegoose/typegoose";
 import { migrate } from "./migrators";
+import { PActivity } from "./models/postgresql/activity";
 import { PDropPattern } from "./models/postgresql/drop_pattern";
 import { PDropPatternElement } from "./models/postgresql/drop_pattern_element";
 import { PDropReport } from "./models/postgresql/drop_report";
@@ -17,6 +18,7 @@ async function init() {
   await PItem.sync({ force: true });
   await PZone.sync({ force: true });
   await PStage.sync({ force: true });
+  await PActivity.sync({ force: true });
   await PDropPattern.sync({ force: true });
   await PDropReport.sync({ force: true });
   await PDropPatternElement.sync({ force: true });
