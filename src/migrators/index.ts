@@ -6,6 +6,7 @@ import activityMigrator from './activities'
 import noticeMigrator from './notices'
 import propertyMigrator from './properties'
 import timeRangeMigrator from './time_ranges'
+import dropInfoMigrator from './drop_info'
 
 export type Migrator = () => Promise<void>
 
@@ -18,6 +19,7 @@ const migrators: Migrator[] = [
   noticeMigrator,
   propertyMigrator,
   timeRangeMigrator,
+  dropInfoMigrator,
 ]
 
 export const migrate = async () => {

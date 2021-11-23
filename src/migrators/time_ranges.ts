@@ -1,6 +1,7 @@
 import { Migrator } from "."
 import { MTimeRangeModel } from "../models/mongo/time_range"
 import { PTimeRange } from "../models/postgresql/time_range"
+import { cache } from "../utils/cache"
 import { removeServerFromTimeRangeName } from "../utils/time_range"
 
 const timeRangeMigrator: Migrator = async () => {
@@ -25,14 +26,16 @@ const timeRangeMigrator: Migrator = async () => {
       comment = '日' + comment;
     }
     
+    const rangeName = removeServerFromTimeRangeName(i.rangeID);
     const postgresDoc = {
-      name: removeServerFromTimeRangeName(i.rangeID),
+      name: rangeName,
       startTime: i.start,
       endTime: i.end,
       comment: comment,
       server: server,
     }
-    await PTimeRange.create(postgresDoc);
+    const created = await PTimeRange.create(postgresDoc);
+    cache.set(`timeRange:timeRange_${rangeName}_${server}`, created.toJSON());
 
     if (server === 'JP') {
       const docCopy = { ...postgresDoc };
@@ -40,7 +43,8 @@ const timeRangeMigrator: Migrator = async () => {
       comment = comment.substring('日'.length);
       comment = '韩' + comment;
       docCopy.comment = comment;
-      await PTimeRange.create(docCopy);
+      const created_KR = await PTimeRange.create(docCopy);
+      cache.set(`timeRange:timeRange_${rangeName}_KR`, created_KR.toJSON());
     }
   }
 }
