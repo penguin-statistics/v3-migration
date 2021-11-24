@@ -38,10 +38,6 @@ export const PDropReport = sequelize.define('drop_report', {
     type: DataTypes.DATE,
     allowNull: false
   },
-  reliable: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
-  },
   deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false
