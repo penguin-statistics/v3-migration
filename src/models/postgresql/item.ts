@@ -8,7 +8,7 @@ export const PItem = sequelize.define('item', {
     primaryKey: true,
     autoIncrement: true
   },
-  itemId: {
+  arkItemId: {
     type: DataTypes.STRING(32),
     allowNull: false
   },

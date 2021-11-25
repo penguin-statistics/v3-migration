@@ -8,7 +8,7 @@ export const PZone = sequelize.define('zone', {
     primaryKey: true,
     autoIncrement: true
   },
-  zoneId: {
+  arkZoneId: {
     type: DataTypes.STRING(32),
     allowNull: false
   },

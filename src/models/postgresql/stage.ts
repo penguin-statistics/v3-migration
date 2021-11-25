@@ -9,7 +9,7 @@ export const PStage = sequelize.define('stage', {
     primaryKey: true,
     autoIncrement: true
   },
-  stageId: {
+  arkStageId: {
     type: DataTypes.STRING(32),
     allowNull: false
   },

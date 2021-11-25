@@ -24,7 +24,7 @@ const stageMigrator: Migrator = async () => {
     }) as any
 
     const postgresDoc = {
-      stageId: i.stageId,
+      arkStageId: i.stageId,
       zoneId: zone.id,
       code: i.codeMap,
       sanity: normalizeSanity(i.apCost),

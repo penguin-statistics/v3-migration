@@ -39,8 +39,8 @@ export const PDropInfo = sequelize.define(
       },
     },
     bounds: {
-        type: DataTypes.JSON,
-      },
+      type: DataTypes.JSON,
+    },
     accumulable: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
