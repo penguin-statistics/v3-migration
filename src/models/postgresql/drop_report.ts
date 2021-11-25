@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
+import { PAccount } from "./account";
 import { server } from "./common";
 import { PDropPattern } from "./drop_pattern";
 import { PStage } from "./stage";
@@ -42,7 +43,15 @@ export const PDropReport = sequelize.define('drop_report', {
     type: DataTypes.BOOLEAN,
     allowNull: false
   },
-  server
+  server,
+  accountId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: PAccount,
+      key: 'id'
+    }
+  }
 }, {
   timestamps: false,
   underscored: true,
@@ -61,6 +70,9 @@ export const PDropReport = sequelize.define('drop_report', {
     },
     {
       fields: ['server'],
+    },
+    {
+      fields: ['account_id'],
     },
   ],
 })

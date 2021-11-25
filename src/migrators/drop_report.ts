@@ -5,6 +5,7 @@ import { PDropPattern } from "../models/postgresql/drop_pattern"
 import { PDropPatternElement } from "../models/postgresql/drop_pattern_element"
 import { PDropReport } from "../models/postgresql/drop_report"
 import { cache } from "../utils/cache"
+import { PAccount } from "../models/postgresql/account"
 
 const sha256 = (str: string): string => {
   const h = crypto.createHash('sha256')
@@ -26,6 +27,11 @@ const dropsToHash = (drops: Drop[]) => {
 }
 
 const dropReportMigrator: Migrator = async () => {
+  // create a map of account id and penguin id
+  const accounts = await PAccount.findAll({}) as any;
+  const accountsMap = {};
+  accounts.forEach(account => accountsMap[account.penguinId] = account.id);
+
   const allCount = await MItemDropModel.count();
   const shouldImportCount = Math.min(totalLimit, allCount);
   let finishedNum = 0;
@@ -43,7 +49,12 @@ const dropReportMigrator: Migrator = async () => {
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
 
       const stage = (cache.get(`stage:stageId_${i.stageId}`)) as any
-      if (!stage || !i.server || !i.isReliable) {
+      if (!stage || !i.server || !i.isReliable || !i.userID) {
+        continue;
+      }
+
+      const accountId = accountsMap[i.userID];
+      if (!accountId) {
         continue;
       }
 
@@ -91,7 +102,8 @@ const dropReportMigrator: Migrator = async () => {
         ip: ips[0],
         createdAt: i.timestamp,
         deleted: i.isDeleted,
-        server: i.server
+        server: i.server,
+        accountId: accountId
       });
     }
     await PDropReport.bulkCreate(oneBulk);

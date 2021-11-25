@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
-import { existence } from "./common";
 
 export const PNotice = sequelize.define('notice', {
   id: {
