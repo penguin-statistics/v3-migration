@@ -22,5 +22,6 @@ export const PTimeRange = sequelize.define('time_range', {
   },
   server
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

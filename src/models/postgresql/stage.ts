@@ -33,5 +33,6 @@ export const PStage = sequelize.define('stage', {
     type: DataTypes.INTEGER,
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

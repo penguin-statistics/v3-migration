@@ -33,5 +33,6 @@ export const PZone = sequelize.define('zone', {
     type: DataTypes.STRING(128),
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

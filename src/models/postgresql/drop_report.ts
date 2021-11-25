@@ -44,5 +44,6 @@ export const PDropReport = sequelize.define('drop_report', {
   },
   server
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

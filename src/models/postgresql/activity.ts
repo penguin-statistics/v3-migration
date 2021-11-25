@@ -22,5 +22,6 @@ export const PActivity = sequelize.define('activity', {
   /** name: I18nMap */
   existence,
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

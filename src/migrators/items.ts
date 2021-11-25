@@ -1,4 +1,4 @@
-import { Migrator } from "."
+import { Migrator } from "./index"
 import { MItemModel } from "../models/mongo/item"
 import { PItem } from "../models/postgresql/item"
 import { cache } from "../utils/cache"
@@ -27,6 +27,8 @@ const itemMigrator: Migrator = async () => {
 
     cache.set(`item:itemId_${i.itemId}`, created.toJSON())
   }
+
+  console.log(`[Migrator] [Item] Finished migrating ${items.length} records`)
 }
 
 export default itemMigrator

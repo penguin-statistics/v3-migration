@@ -1,4 +1,4 @@
-import { Migrator } from "."
+import { Migrator } from "./index"
 import { MItemDropModel } from "../models/mongo/item_drop_v2"
 import crypto from 'crypto'
 import { PDropPattern } from "../models/postgresql/drop_pattern"
@@ -11,7 +11,6 @@ const sha256 = (str: string): string => {
   h.update(str)
   return h.digest('hex')
 }
-
 interface Drop {
   quantity: number
   itemId: string
@@ -40,7 +39,7 @@ const dropReportMigrator: Migrator = async () => {
     let oneBulk = [];
     for (const item of itemDrops) {
       const i = item.toJSON() as any
-  
+
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
 
       const stage = (cache.get(`stage:stageId_${i.stageId}`)) as any
@@ -49,19 +48,19 @@ const dropReportMigrator: Migrator = async () => {
       }
 
       const hash = dropsToHash(i.drops)
-  
+
       const pattern = cache.get(`pattern:hash_${hash}`) as any
       // console.log('> pattern cache with key', `pattern:hash_${hash}`, 'returned', pattern)
-  
+
       let patternId: number
-  
+
       if (pattern) {
         patternId = pattern.id
       } else {
         const newPattern = await PDropPattern.create({ hash }) as any
-  
+
         patternId = newPattern.id
-  
+
         cache.set(`pattern:hash_${hash}`, newPattern.toJSON())
 
         const drops = i.drops.filter((drop: Drop) => drop.itemId && drop.quantity > 0).map((drop: Drop) => {
@@ -75,16 +74,16 @@ const dropReportMigrator: Migrator = async () => {
             dropPatternId: patternId,
           };
         }).filter((drop: Drop) => drop !== null);
-  
+
         await PDropPatternElement.bulkCreate(drops)
       }
-  
+
       const ips = i.ip.split(',').map(el => el.trim())
-  
+
       // if (ips.length > 1) {
       //   console.log('  - Multiple IP:', ips)
       // }
-  
+
       oneBulk.push({
         stageId: stage.id,
         patternId,

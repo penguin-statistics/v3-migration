@@ -13,6 +13,7 @@ export const PDropPattern = sequelize.define('drop_pattern', {
   }
 }, {
   timestamps: false,
+  underscored: true,
   indexes: [
     {
       unique: true,

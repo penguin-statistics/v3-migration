@@ -30,5 +30,6 @@ export const PDropPatternElement = sequelize.define('drop_pattern_element', {
     allowNull: false
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

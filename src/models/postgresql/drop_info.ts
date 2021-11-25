@@ -48,5 +48,6 @@ export const PDropInfo = sequelize.define(
   },
   {
     timestamps: false,
+    underscored: true
   }
 );

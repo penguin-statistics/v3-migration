@@ -1,4 +1,4 @@
-import { Migrator } from "."
+import { Migrator } from "./index"
 import { MZoneModel } from "../models/mongo/zone"
 import { PZone } from "../models/postgresql/zone"
 
@@ -20,6 +20,8 @@ const zoneMigrator: Migrator = async () => {
     }
     await PZone.create(postgresDoc)
   }
+
+  console.log(`[Migrator] [Zone] Finished migrating ${zones.length} records`)
 }
 
 export default zoneMigrator

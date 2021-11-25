@@ -1,8 +1,9 @@
 {
   "name": "penguin-stats-db-migration",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "exports": "./src/index.ts",
   "license": "MIT",
+  "node": "^12.20.0 || ^14.13.1 || >=16.0.0",
   "dependencies": {
     "@typegoose/typegoose": "^9.2.0",
     "@types/node": "^16.11.9",
@@ -11,7 +12,8 @@
     "mongoose": "^6.0.13",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.12.0-alpha.1"
+    "sequelize": "^6.12.0-alpha.1",
+    "tiny-async-pool": "^1.2.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.0",

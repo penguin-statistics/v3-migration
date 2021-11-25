@@ -14,10 +14,15 @@ import { PZone } from "./models/postgresql/zone";
 import sequelize from "./utils/postgresql";
 
 async function init() {
+  console.log("[Migrator] Initializing...");
+
+  console.log("[Migrator] Connecting to MongoDB...");
   await mongoose.connect("mongodb://localhost:27017/penguin_stats")
   await mongoose.connection.db.admin().ping();
-
+  console.log("[Migrator] MongoDB Connected.");
+  console.log("[Migrator] Connecting to PostgreSQL...");
   await sequelize.authenticate();
+  console.log("[Migrator] PostgreSQL Connected.");
 
   await PItem.sync({ force: true });
   await PZone.sync({ force: true });
@@ -32,15 +37,8 @@ async function init() {
   await PDropInfo.sync({ force: true });
 
   await migrate();
+
+  process.exit(0)
 }
 
 init()
-  .then(() => {
-    console.log('Done')
-  })
-  .catch(err => {
-    console.error(err)
-  })
-  .finally(() => {
-    process.exit(0);
-  })

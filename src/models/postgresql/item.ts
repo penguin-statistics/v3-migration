@@ -37,5 +37,6 @@ export const PItem = sequelize.define('item', {
     allowNull: false
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

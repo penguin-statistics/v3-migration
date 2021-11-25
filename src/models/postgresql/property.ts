@@ -16,5 +16,6 @@ export const PProperty = sequelize.define('property', {
     allowNull: false
   },
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

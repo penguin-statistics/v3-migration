@@ -20,5 +20,6 @@ export const PNotice = sequelize.define('notice', {
     allowNull: false
   },
 }, {
-  timestamps: false
+  timestamps: false,
+  underscored: true
 })

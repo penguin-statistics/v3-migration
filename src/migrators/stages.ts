@@ -1,4 +1,4 @@
-import { Migrator } from "."
+import { Migrator } from "./index"
 import { MStageModel } from "../models/mongo/stage_v2"
 import { PStage } from "../models/postgresql/stage"
 import { PZone } from "../models/postgresql/zone"
@@ -35,6 +35,8 @@ const stageMigrator: Migrator = async () => {
 
     cache.set(`stage:stageId_${i.stageId}`, created.toJSON())
   }
+
+  console.log(`[Migrator] [Stage] Finished migrating ${stages.length} records`)
 }
 
 export default stageMigrator

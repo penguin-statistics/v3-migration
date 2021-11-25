@@ -14,11 +14,11 @@ const migrators: Migrator[] = [
   itemMigrator,
   zonesMigrator,
   stagesMigrator,
-  dropReportMigrator,
-  activityMigrator,
   noticeMigrator,
   propertyMigrator,
+  dropReportMigrator,
   timeRangeMigrator,
+  activityMigrator,
   dropInfoMigrator,
 ]
 
