@@ -11,7 +11,6 @@ export const PNotice = sequelize.define('notice', {
   conditions: {
     type: DataTypes.JSON,
   },
-  existence,
   severity: {
     type: DataTypes.INTEGER,
   },

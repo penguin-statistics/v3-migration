@@ -11,7 +11,6 @@ const noticeMigrator: Migrator = async () => {
     const i = notice.toJSON() as any
     const postgresDoc = {
       conditions: i.conditions,
-      existence: i.existence,
       severity: i.severity,
       content: i.contentMap
     }
