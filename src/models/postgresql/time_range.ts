@@ -23,5 +23,13 @@ export const PTimeRange = sequelize.define('time_range', {
   server
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['name'],
+    },
+    {
+      fields: ['server'],
+    },
+  ],
 })

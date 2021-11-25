@@ -10,7 +10,8 @@ export const PItem = sequelize.define('item', {
   },
   arkItemId: {
     type: DataTypes.STRING(32),
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
   existence,
   /** name: I18nMap */
@@ -38,5 +39,14 @@ export const PItem = sequelize.define('item', {
   }
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['ark_item_id'],
+    },
+    {
+      fields: ['group'],
+      using: 'hash'
+    },
+  ],
 })

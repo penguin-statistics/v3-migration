@@ -31,5 +31,10 @@ export const PDropPatternElement = sequelize.define('drop_pattern_element', {
   }
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['drop_pattern_id'],
+    },
+  ],
 })

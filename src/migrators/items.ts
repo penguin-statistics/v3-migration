@@ -11,7 +11,7 @@ const itemMigrator: Migrator = async () => {
   for (const item of items) {
     const i = item.toJSON() as any
     const postgresDoc = {
-      itemId: i.itemId,
+      arkItemId: i.itemId,
       existence: i.existence,
       name: i.nameMap,
       sortId: i.sortId,

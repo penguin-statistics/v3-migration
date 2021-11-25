@@ -1,7 +1,6 @@
 import { Migrator } from ".";
 import { MDropInfoModel } from "../models/mongo/drop_info";
 import { PDropInfo } from "../models/postgresql/drop_info";
-import { PTimeRange } from "../models/postgresql/time_range";
 import { cache } from "../utils/cache";
 import { removeServerFromTimeRangeName } from "../utils/time_range";
 

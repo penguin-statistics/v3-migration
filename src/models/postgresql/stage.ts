@@ -11,7 +11,8 @@ export const PStage = sequelize.define('stage', {
   },
   arkStageId: {
     type: DataTypes.STRING(32),
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
   zoneId: {
     type: DataTypes.INTEGER,
@@ -34,5 +35,13 @@ export const PStage = sequelize.define('stage', {
   }
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['ark_stage_id'],
+    },
+    {
+      fields: ['zone_id'],
+    },
+  ],
 })

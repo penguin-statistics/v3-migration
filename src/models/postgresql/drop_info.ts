@@ -48,6 +48,20 @@ export const PDropInfo = sequelize.define(
   },
   {
     timestamps: false,
-    underscored: true
+    underscored: true,
+    indexes: [
+      {
+        fields: ['server']
+      },
+      {
+        fields: ['stage_id']
+      },
+      {
+        fields: ['drop_type']
+      },
+      {
+        fields: ['time_range_id']
+      }
+    ]
   }
 );

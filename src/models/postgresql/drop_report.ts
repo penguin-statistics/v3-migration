@@ -45,5 +45,22 @@ export const PDropReport = sequelize.define('drop_report', {
   server
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['stage_id'],
+    },
+    {
+      fields: ['pattern_id'],
+    },
+    {
+      fields: ['created_at'],
+    },
+    {
+      fields: ['deleted'],
+    },
+    {
+      fields: ['server'],
+    },
+  ],
 })

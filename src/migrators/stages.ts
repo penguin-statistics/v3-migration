@@ -19,7 +19,7 @@ const stageMigrator: Migrator = async () => {
 
     const zone = await PZone.findOne({
       where: {
-        zoneId: i.zoneId
+        arkZoneId: i.zoneId
       }
     }) as any
 

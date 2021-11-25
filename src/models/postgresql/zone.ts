@@ -10,7 +10,8 @@ export const PZone = sequelize.define('zone', {
   },
   arkZoneId: {
     type: DataTypes.STRING(32),
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
   index: {
     type: DataTypes.INTEGER,
@@ -34,5 +35,10 @@ export const PZone = sequelize.define('zone', {
   }
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['ark_zone_id'],
+    },
+  ],
 })

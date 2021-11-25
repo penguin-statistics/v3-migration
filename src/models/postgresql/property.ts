@@ -17,5 +17,10 @@ export const PProperty = sequelize.define('property', {
   },
 }, {
   timestamps: false,
-  underscored: true
+  underscored: true,
+  indexes: [
+    {
+      fields: ['key'],
+    },
+  ],
 })

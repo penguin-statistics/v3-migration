@@ -10,7 +10,7 @@ const zoneMigrator: Migrator = async () => {
   for (const zone of zones) {
     const i = zone.toJSON() as any
     const postgresDoc = {
-      zoneId: i.zoneId,
+      arkZoneId: i.zoneId,
       index: i.zoneIndex,
       category: i.type,
       type: i.subType,
