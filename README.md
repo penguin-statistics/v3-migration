@@ -2,11 +2,11 @@
      alt="Penguin Statistics - Logo"
      width="96px" />
      
-# Penguin Statistics - V4 Migration
-[![License](https://img.shields.io/github/license/penguin-statistics/v4-migration)](https://github.com/penguin-statistics/v4-migration/blob/dev/LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/penguin-statistics/v4-migration)](https://github.com/penguin-statistics/v4-migration/commits/dev)
+# Penguin Statistics - V3 Migration
+[![License](https://img.shields.io/github/license/penguin-statistics/v3-migration)](https://github.com/penguin-statistics/v3-migration/blob/dev/LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/penguin-statistics/v3-migration)](https://github.com/penguin-statistics/v3-migration/commits/dev)
 
-Database Migration from MongoDB to PostgreSQL for [Penguin Statistics](https://penguin-stats.io/?utm_source=github) v4 :D
+Database Migration from MongoDB to PostgreSQL for [Penguin Statistics](https://penguin-stats.io/?utm_source=github) v3 :D
 
 ## Maintainers
 This frontend project has mainly being maintained by the following contributors (in alphabetical order):
