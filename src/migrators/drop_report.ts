@@ -30,7 +30,7 @@ const dropReportMigrator: Migrator = async () => {
   // create a map of account id and penguin id
   const accounts = await PAccount.findAll({}) as any;
   const accountsMap = {};
-  accounts.forEach(account => accountsMap[account.penguinId] = account.id);
+  accounts.forEach(account => accountsMap[account.penguinId] = account.accountId);
 
   const allCount = await MItemDropModel.count();
   const shouldImportCount = Math.min(totalLimit, allCount);
@@ -66,11 +66,11 @@ const dropReportMigrator: Migrator = async () => {
       let patternId: number
 
       if (pattern) {
-        patternId = pattern.id
+        patternId = pattern.patternId
       } else {
         const newPattern = await PDropPattern.create({ hash }) as any
 
-        patternId = newPattern.id
+        patternId = newPattern.patternId
 
         cache.set(`pattern:hash_${hash}`, newPattern.toJSON())
 
@@ -80,7 +80,7 @@ const dropReportMigrator: Migrator = async () => {
             return null;
           }
           return {
-            itemId: item.id,
+            itemId: item.itemId,
             quantity: drop.quantity,
             dropPatternId: patternId,
           };
@@ -96,7 +96,7 @@ const dropReportMigrator: Migrator = async () => {
       // }
 
       oneBulk.push({
-        stageId: stage.id,
+        stageId: stage.stageId,
         patternId,
         times: i.times,
         ip: ips[0],

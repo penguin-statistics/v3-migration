@@ -6,7 +6,7 @@ import { PDropPattern } from "./drop_pattern";
 import { PStage } from "./stage";
 
 export const PDropReport = sequelize.define('drop_report', {
-  id: {
+  reportId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -16,7 +16,7 @@ export const PDropReport = sequelize.define('drop_report', {
     allowNull: false,
     references: {
       model: PStage,
-      key: 'id'
+      key: 'stage_id'
     }
   },
   patternId: {
@@ -24,7 +24,7 @@ export const PDropReport = sequelize.define('drop_report', {
     allowNull: false,
     references: {
       model: PDropPattern,
-      key: 'id'
+      key: 'pattern_id'
     }
   },
   times: {
@@ -49,7 +49,7 @@ export const PDropReport = sequelize.define('drop_report', {
     allowNull: false,
     references: {
       model: PAccount,
-      key: 'id'
+      key: 'account_id'
     }
   }
 }, {

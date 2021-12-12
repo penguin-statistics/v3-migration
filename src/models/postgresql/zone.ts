@@ -3,7 +3,7 @@ import sequelize from "../../utils/postgresql";
 import { existence } from "./common";
 
 export const PZone = sequelize.define('zone', {
-  id: {
+  zoneId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

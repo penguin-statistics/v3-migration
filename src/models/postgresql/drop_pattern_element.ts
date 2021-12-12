@@ -4,7 +4,7 @@ import { PDropPattern } from "./drop_pattern";
 import { PItem } from "./item";
 
 export const PDropPatternElement = sequelize.define('drop_pattern_element', {
-  id: {
+  elementId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -14,7 +14,7 @@ export const PDropPatternElement = sequelize.define('drop_pattern_element', {
     allowNull: false,
     references: {
       model: PDropPattern,
-      key: 'id'
+      key: 'pattern_id'
     }
   },
   itemId: {
@@ -22,7 +22,7 @@ export const PDropPatternElement = sequelize.define('drop_pattern_element', {
     allowNull: false,
     references: {
       model: PItem,
-      key: 'id'
+      key: 'item_id'
     }
   },
   quantity: {

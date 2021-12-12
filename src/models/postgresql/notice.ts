@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
 
 export const PNotice = sequelize.define('notice', {
-  id: {
+  noticeId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

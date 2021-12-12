@@ -25,14 +25,14 @@ const stageMigrator: Migrator = async () => {
 
     const postgresDoc = {
       arkStageId: i.stageId,
-      zoneId: zone.id,
+      zoneId: zone.zoneId,
       code: i.codeMap,
       sanity: normalizeSanity(i.apCost),
       existence: i.existence,
       minClearTime: i.minClearTime
     }
     const created = await PStage.create(postgresDoc)
-
+    
     cache.set(`stage:stageId_${i.stageId}`, created.toJSON())
   }
 

@@ -3,7 +3,7 @@ import sequelize from "../../utils/postgresql";
 import { existence } from "./common";
 
 export const PActivity = sequelize.define('activity', {
-  id: {
+  activityId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

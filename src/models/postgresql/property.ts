@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
 
 export const PProperty = sequelize.define('property', {
-  id: {
+  propertyId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

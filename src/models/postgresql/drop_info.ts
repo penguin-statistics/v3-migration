@@ -8,7 +8,7 @@ import { PTimeRange } from "./time_range";
 export const PDropInfo = sequelize.define(
   "drop_info",
   {
-    id: {
+    dropId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -19,14 +19,14 @@ export const PDropInfo = sequelize.define(
       allowNull: false,
       references: {
         model: PStage,
-        key: "id",
+        key: "stage_id",
       },
     },
     itemId: {
       type: DataTypes.INTEGER,
       references: {
         model: PItem,
-        key: "id",
+        key: "item_id",
       },
     },
     dropType,
@@ -35,7 +35,7 @@ export const PDropInfo = sequelize.define(
       allowNull: false,
       references: {
         model: PTimeRange,
-        key: "id",
+        key: "range_id",
       },
     },
     bounds: {

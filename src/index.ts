@@ -28,6 +28,7 @@ async function init() {
   await PItem.sync({ force: true });
   await PZone.sync({ force: true });
   await PStage.sync({ force: true });
+  await PAccount.sync({ force: true });
   await PActivity.sync({ force: true });
   await PDropPattern.sync({ force: true });
   await PDropReport.sync({ force: true });
@@ -36,11 +37,18 @@ async function init() {
   await PProperty.sync({ force: true });
   await PTimeRange.sync({ force: true });
   await PDropInfo.sync({ force: true });
-  await PAccount.sync({ force: true });
 
   await migrate();
-  
+
   process.exit(0)
 }
 
 init()
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => {
+    process.exit(0);
+  })
+

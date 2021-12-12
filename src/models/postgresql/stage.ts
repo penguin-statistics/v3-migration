@@ -4,7 +4,7 @@ import { existence } from "./common";
 import { PZone } from "./zone";
 
 export const PStage = sequelize.define('stage', {
-  id: {
+  stageId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -19,7 +19,7 @@ export const PStage = sequelize.define('stage', {
     allowNull: false,
     references: {
       model: PZone,
-      key: 'id'
+      key: 'zone_id'
     }
   },
   code: {

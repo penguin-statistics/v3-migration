@@ -3,7 +3,7 @@ import sequelize from "../../utils/postgresql";
 import { existence } from "./common";
 
 export const PItem = sequelize.define('item', {
-  id: {
+  itemId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -26,6 +26,9 @@ export const PItem = sequelize.define('item', {
   rarity: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  type: {
+    type: DataTypes.STRING(16),
   },
   group: {
     type: DataTypes.STRING(16),

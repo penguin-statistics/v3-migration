@@ -3,7 +3,7 @@ import sequelize from "../../utils/postgresql";
 import { server } from "./common";
 
 export const PTimeRange = sequelize.define('time_range', {
-  id: {
+  rangeId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

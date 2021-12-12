@@ -16,6 +16,7 @@ const itemMigrator: Migrator = async () => {
       name: i.nameMap,
       sortId: i.sortId,
       rarity: i.rarity,
+      type: i.itemType,
       group: i.groupID,
       sprite: i.spriteCoord ? i.spriteCoord.join(':') : null,
       keywords: {

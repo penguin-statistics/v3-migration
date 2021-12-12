@@ -30,10 +30,10 @@ const dropInfoMigrator: Migrator = async () => {
 
     const postgresDoc = {
       server: i.server,
-      stageId: stage.id,
-      itemId: item ? item.id : null,
+      stageId: stage.stageId,
+      itemId: item ? item.itemId : null,
       dropType: dropType,
-      timeRangeId: timeRange.id,
+      timeRangeId: timeRange.rangeId,
       bounds: i.bounds,
       accumulable: i.accumulatable != null ? i.accumulatable : false,
     };

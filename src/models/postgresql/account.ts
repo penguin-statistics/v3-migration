@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
 
 export const PAccount = sequelize.define('account', {
-  id: {
+  accountId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

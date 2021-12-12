@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
 
 export const PDropPattern = sequelize.define('drop_pattern', {
-  id: {
+  patternId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
