@@ -1,3 +1,3 @@
-const cache = new Map();
+const cache = new Map()
 
 export { cache }

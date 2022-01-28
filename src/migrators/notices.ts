@@ -1,6 +1,6 @@
-import { Migrator } from "."
-import { MNoticeModel } from "../models/mongo/notice"
-import { PNotice } from "../models/postgresql/notice"
+import { Migrator } from '.'
+import { MNoticeModel } from '../models/mongo/notice'
+import { PNotice } from '../models/postgresql/notice'
 
 const noticeMigrator: Migrator = async () => {
   const notices = await MNoticeModel.find({}).exec()
@@ -12,7 +12,7 @@ const noticeMigrator: Migrator = async () => {
     const postgresDoc = {
       conditions: i.conditions,
       severity: i.severity,
-      content: i.contentMap
+      content: i.contentMap,
     }
     await PNotice.create(postgresDoc)
   }

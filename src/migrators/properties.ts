@@ -1,6 +1,6 @@
-import { Migrator } from "."
-import { MPropertiesModel } from "../models/mongo/properties"
-import { PProperty } from "../models/postgresql/property"
+import { Migrator } from '.'
+import { MPropertiesModel } from '../models/mongo/properties'
+import { PProperty } from '../models/postgresql/property'
 
 const propertyMigrator: Migrator = async () => {
   const properties = await MPropertiesModel.find({}).exec()
@@ -11,7 +11,7 @@ const propertyMigrator: Migrator = async () => {
     const i = property.toJSON() as any
     const postgresDoc = {
       key: i.key,
-      value: i.value
+      value: i.value,
     }
     await PProperty.create(postgresDoc)
   }

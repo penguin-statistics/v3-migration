@@ -1,11 +1,10 @@
-import { getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions } from '@typegoose/typegoose'
 
 @modelOptions({
   schemaOptions: {
-    collection: 'properties'
-  }
+    collection: 'properties',
+  },
 })
-export class MProperties {
-}
+export class MProperties {}
 
-export const MPropertiesModel = getModelForClass(MProperties);
+export const MPropertiesModel = getModelForClass(MProperties)

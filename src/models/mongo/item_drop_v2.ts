@@ -1,11 +1,10 @@
-import { getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions } from '@typegoose/typegoose'
 
 @modelOptions({
   schemaOptions: {
-    collection: 'item_drop_v2'
-  }
+    collection: 'item_drop_v2',
+  },
 })
-export class MItemDrop {
-}
+export class MItemDrop {}
 
-export const MItemDropModel = getModelForClass(MItemDrop);
+export const MItemDropModel = getModelForClass(MItemDrop)

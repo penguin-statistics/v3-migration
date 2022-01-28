@@ -1,8 +1,8 @@
-import { Migrator } from "./index"
-import { MItemModel } from "../models/mongo/item"
-import { PItem } from "../models/postgresql/item"
-import { cache } from "../utils/cache"
-import { createPBar } from '../utils/pbar';
+import { Migrator } from './index'
+import { MItemModel } from '../models/mongo/item'
+import { PItem } from '../models/postgresql/item'
+import { cache } from '../utils/cache'
+import { createPBar } from '../utils/pbar'
 
 const itemMigrator: Migrator = async () => {
   const items = await MItemModel.find({}).exec()
@@ -23,8 +23,8 @@ const itemMigrator: Migrator = async () => {
       sprite: i.spriteCoord ? i.spriteCoord.join(':') : null,
       keywords: {
         alias: i.aliasMap,
-        pron: i.pronMap
-      }
+        pron: i.pronMap,
+      },
     }
     const created = await PItem.create(postgresDoc)
 

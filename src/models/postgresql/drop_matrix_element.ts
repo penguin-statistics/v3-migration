@@ -1,12 +1,12 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../utils/postgresql";
-import { server } from "./common";
-import { PStage } from "./stage";
-import { PItem } from './item';
-import { PTimeRange } from './time_range';
+import { DataTypes } from 'sequelize'
+import sequelize from '../../utils/postgresql'
+import { server } from './common'
+import { PStage } from './stage'
+import { PItem } from './item'
+import { PTimeRange } from './time_range'
 
 export const PDropMatrixElement = sequelize.define(
-  "drop_matrix_element",
+  'drop_matrix_element',
   {
     elementId: {
       type: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ export const PDropMatrixElement = sequelize.define(
       allowNull: false,
       references: {
         model: PStage,
-        key: "stage_id",
+        key: 'stage_id',
       },
     },
     itemId: {
@@ -26,7 +26,7 @@ export const PDropMatrixElement = sequelize.define(
       allowNull: false,
       references: {
         model: PItem,
-        key: "item_id",
+        key: 'item_id',
       },
     },
     rangeId: {
@@ -34,7 +34,7 @@ export const PDropMatrixElement = sequelize.define(
       allowNull: false,
       references: {
         model: PTimeRange,
-        key: "range_id",
+        key: 'range_id',
       },
     },
     quantity: {
@@ -45,24 +45,24 @@ export const PDropMatrixElement = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    server
+    server,
   },
   {
     timestamps: false,
     underscored: true,
     indexes: [
       {
-        fields: ["stage_id"],
+        fields: ['stage_id'],
       },
       {
-        fields: ["item_id"],
+        fields: ['item_id'],
       },
       {
-        fields: ["range_id"],
+        fields: ['range_id'],
       },
       {
-        fields: ["server"],
+        fields: ['server'],
       },
     ],
-  }
-);
+  },
+)

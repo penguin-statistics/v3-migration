@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize'
 
 export const existence = {
   type: DataTypes.JSONB,
@@ -11,6 +11,12 @@ export const server = {
 }
 
 export const dropType = {
-  type: DataTypes.ENUM('REGULAR', 'SPECIAL', 'EXTRA', 'FURNITURE', 'RECOGNITION_ONLY'),
+  type: DataTypes.ENUM(
+    'REGULAR',
+    'SPECIAL',
+    'EXTRA',
+    'FURNITURE',
+    'RECOGNITION_ONLY',
+  ),
   allowNull: false,
 }

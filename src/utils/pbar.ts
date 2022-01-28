@@ -1,4 +1,4 @@
-const ProgressBar = require("progress");
+const ProgressBar = require('progress')
 
 export function createPBar(type: string, length: number) {
   return new ProgressBar(
@@ -6,6 +6,6 @@ export function createPBar(type: string, length: number) {
     {
       total: length,
       width: 100,
-    }
-  );
+    },
+  )
 }

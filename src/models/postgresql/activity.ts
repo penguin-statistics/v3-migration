@@ -1,9 +1,9 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../utils/postgresql";
-import { existence } from "./common";
+import { DataTypes } from 'sequelize'
+import sequelize from '../../utils/postgresql'
+import { existence } from './common'
 
 export const PActivity = sequelize.define(
-  "activity",
+  'activity',
   {
     activityId: {
       type: DataTypes.INTEGER,
@@ -27,5 +27,5 @@ export const PActivity = sequelize.define(
   {
     timestamps: false,
     underscored: true,
-  }
-);
+  },
+)
