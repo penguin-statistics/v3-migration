@@ -51,6 +51,12 @@ export const PDropReport = sequelize.define('drop_report', {
       model: PAccount,
       key: 'account_id'
     }
+  },
+  sourceName: {
+    type: DataTypes.STRING(128),
+  },
+  version: {
+    type: DataTypes.STRING(128),
   }
 }, {
   timestamps: false,

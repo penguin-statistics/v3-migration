@@ -1,19 +1,18 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../utils/postgresql";
-import { dropType, server } from "./common";
-import { PItem } from "./item";
+import { server } from "./common";
 import { PStage } from "./stage";
-import { PTimeRange } from "./time_range";
+import { PItem } from './item';
+import { PTimeRange } from './time_range';
 
-export const PDropInfo = sequelize.define(
-  "drop_info",
+export const PDropMatrixElement = sequelize.define(
+  "drop_matrix_element",
   {
-    dropId: {
+    elementId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    server,
     stageId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -24,12 +23,12 @@ export const PDropInfo = sequelize.define(
     },
     itemId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: PItem,
         key: "item_id",
       },
     },
-    dropType,
     rangeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -38,29 +37,31 @@ export const PDropInfo = sequelize.define(
         key: "range_id",
       },
     },
-    bounds: {
-      type: DataTypes.JSONB,
-    },
-    accumulable: {
-      type: DataTypes.BOOLEAN,
+    quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
+    times: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    server
   },
   {
     timestamps: false,
     underscored: true,
     indexes: [
       {
-        fields: ["server"],
-      },
-      {
         fields: ["stage_id"],
       },
       {
-        fields: ["drop_type"],
+        fields: ["item_id"],
       },
       {
         fields: ["range_id"],
+      },
+      {
+        fields: ["server"],
       },
     ],
   }

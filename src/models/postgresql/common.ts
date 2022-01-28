@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export const existence = {
-  type: DataTypes.JSON,
+  type: DataTypes.JSONB,
   allowNull: false,
 }
 

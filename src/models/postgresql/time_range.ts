@@ -13,9 +13,11 @@ export const PTimeRange = sequelize.define('time_range', {
   },
   startTime: {
     type: DataTypes.DATE,
+    allowNull: false
   },
   endTime: {
     type: DataTypes.DATE,
+    allowNull: false
   },
   comment: {
     type: DataTypes.TEXT(),

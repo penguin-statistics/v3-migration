@@ -6,6 +6,7 @@ import { PDropPatternElement } from "../models/postgresql/drop_pattern_element"
 import { PDropReport } from "../models/postgresql/drop_report"
 import { cache } from "../utils/cache"
 import { PAccount } from "../models/postgresql/account"
+import { createPBar } from '../utils/pbar';
 
 const sha256 = (str: string): string => {
   const h = crypto.createHash('sha256')
@@ -34,13 +35,14 @@ const dropReportMigrator: Migrator = async () => {
 
   const allCount = await MItemDropModel.count();
   const shouldImportCount = Math.min(totalLimit, allCount);
+  const BAR = createPBar('DropReport', shouldImportCount)
   let finishedNum = 0;
   while (finishedNum < totalLimit) {
     const itemDrops = await MItemDropModel.find({}).skip(finishedNum).limit(Math.min(pageSize, shouldImportCount - finishedNum)).exec()
     if (itemDrops.length === 0) {
       break;
     }
-    console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
+    // console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
 
     let oneBulk = [];
     for (const item of itemDrops) {
@@ -94,7 +96,6 @@ const dropReportMigrator: Migrator = async () => {
       // if (ips.length > 1) {
       //   console.log('  - Multiple IP:', ips)
       // }
-
       oneBulk.push({
         stageId: stage.stageId,
         patternId,
@@ -103,12 +104,15 @@ const dropReportMigrator: Migrator = async () => {
         createdAt: i.timestamp,
         deleted: i.isDeleted,
         server: i.server,
-        accountId: accountId
+        accountId: accountId,
+        sourceName: i.source,
+        version: i.version
       });
     }
     await PDropReport.bulkCreate(oneBulk);
     finishedNum += itemDrops.length;
-    console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
+    // console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
+    BAR.tick(itemDrops.length);
   }
 }
 

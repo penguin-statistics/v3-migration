@@ -3,6 +3,7 @@ import { MDropInfoModel } from "../models/mongo/drop_info";
 import { PDropInfo } from "../models/postgresql/drop_info";
 import { cache } from "../utils/cache";
 import { removeServerFromTimeRangeName } from "../utils/time_range";
+import { createPBar } from '../utils/pbar';
 
 const dropTypeMapping = {
   NORMAL_DROP: "REGULAR",
@@ -14,6 +15,7 @@ const dropInfoMigrator: Migrator = async () => {
   const infos = await MDropInfoModel.find({}).exec();
 
   console.log(`[Migrator] [DropInfo] Migrating ${infos.length} records`);
+  const BAR = createPBar("DropInfo", infos.length);
 
   for (const info of infos) {
     const i = info.toJSON() as any;
@@ -33,11 +35,12 @@ const dropInfoMigrator: Migrator = async () => {
       stageId: stage.stageId,
       itemId: item ? item.itemId : null,
       dropType: dropType,
-      timeRangeId: timeRange.rangeId,
+      rangeId: timeRange.rangeId,
       bounds: i.bounds,
       accumulable: i.accumulatable != null ? i.accumulatable : false,
     };
     await PDropInfo.create(postgresDoc);
+    BAR.tick()
   }
 };
 
