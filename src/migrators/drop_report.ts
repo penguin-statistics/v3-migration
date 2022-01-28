@@ -103,6 +103,7 @@ const dropReportMigrator: Migrator = async () => {
         ip: ips[0],
         createdAt: i.timestamp,
         deleted: i.isDeleted,
+        reliable: i.isReliable,
         server: i.server,
         accountId: accountId,
         sourceName: i.source,
