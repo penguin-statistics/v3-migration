@@ -117,12 +117,15 @@ const dropReportMigrator: Migrator = async () => {
         accountId: accountId,
       })
 
+      const { md5, ...metadata } = i.screenshotMetadata || {}
+
       dropReportExtraBulk.push({
         reportId: currentIndex,
         sourceName: i.source,
         version: i.version,
         ip: ips[0],
-        metadata: i.screenshotMetadata,
+        metadata: metadata || null,
+        md5,
       })
     }
     await Promise.all([

@@ -20,7 +20,10 @@ export const PDropReportExtras = sequelize.define(
     },
     metadata: {
       type: DataTypes.JSONB,
-    }
+    },
+    md5: {
+      type: DataTypes.STRING(32),
+    },
   },
   {
     timestamps: false,
