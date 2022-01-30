@@ -14,6 +14,7 @@ import { PAccount } from './models/postgresql/account'
 import { PZone } from './models/postgresql/zone'
 import sequelize from './utils/postgresql'
 import { PDropMatrixElement } from './models/postgresql/drop_matrix_element'
+import { PDropReportExtras } from './models/postgresql/drop_report_extras'
 
 async function init() {
   console.log('[Migrator] Initializing...')
@@ -32,6 +33,7 @@ async function init() {
   await PAccount.sync({ force: true })
   await PActivity.sync({ force: true })
   await PDropPattern.sync({ force: true })
+  await PDropReportExtras.sync({ force: true })
   await PDropReport.sync({ force: true })
   await PDropPatternElement.sync({ force: true })
   await PDropMatrixElement.sync({ force: true })

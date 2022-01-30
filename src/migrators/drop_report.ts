@@ -7,6 +7,7 @@ import { PDropReport } from '../models/postgresql/drop_report'
 import { cache } from '../utils/cache'
 import { PAccount } from '../models/postgresql/account'
 import { createPBar } from '../utils/pbar'
+import { PDropReportExtras } from '../models/postgresql/drop_report_extras'
 
 const sha256 = (str: string): string => {
   const h = crypto.createHash('sha256')
@@ -39,6 +40,7 @@ const dropReportMigrator: Migrator = async () => {
   const shouldImportCount = Math.min(totalLimit, allCount)
   const BAR = createPBar('DropReport', shouldImportCount)
   let finishedNum = 0
+  let currentIndex = 0
   while (finishedNum < totalLimit) {
     const itemDrops = await MItemDropModel.find({})
       .skip(finishedNum)
@@ -49,8 +51,10 @@ const dropReportMigrator: Migrator = async () => {
     }
     // console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
 
-    let oneBulk = []
+    let dropReportBulk = []
+    let dropReportExtraBulk = []
     for (const item of itemDrops) {
+      currentIndex += 1
       const i = item.toJSON() as any
 
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
@@ -101,24 +105,30 @@ const dropReportMigrator: Migrator = async () => {
 
       const ips = i.ip.split(',').map((el) => el.trim())
 
-      // if (ips.length > 1) {
-      //   console.log('  - Multiple IP:', ips)
-      // }
-      oneBulk.push({
+      dropReportBulk.push({
+        reportId: currentIndex,
         stageId: stage.stageId,
         patternId,
         times: i.times,
-        ip: ips[0],
         createdAt: i.timestamp,
         deleted: i.isDeleted,
         reliable: i.isReliable,
         server: i.server,
         accountId: accountId,
+      })
+
+      dropReportExtraBulk.push({
+        reportId: currentIndex,
         sourceName: i.source,
         version: i.version,
+        ip: ips[0],
+        metadata: i.screenshotMetadata,
       })
     }
-    await PDropReport.bulkCreate(oneBulk)
+    await Promise.all([
+      PDropReport.bulkCreate(dropReportBulk),
+      PDropReportExtras.bulkCreate(dropReportExtraBulk),
+    ])
     finishedNum += itemDrops.length
     // console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
     BAR.tick(itemDrops.length)

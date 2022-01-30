@@ -33,10 +33,6 @@ export const PDropReport = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ip: {
-      type: DataTypes.CIDR,
-      allowNull: false,
-    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -57,12 +53,6 @@ export const PDropReport = sequelize.define(
         model: PAccount,
         key: 'account_id',
       },
-    },
-    sourceName: {
-      type: DataTypes.STRING(128),
-    },
-    version: {
-      type: DataTypes.STRING(128),
     },
   },
   {
