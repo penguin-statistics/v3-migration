@@ -16,6 +16,7 @@ import sequelize from './utils/postgresql'
 import { PDropMatrixElement } from './models/postgresql/drop_matrix_element'
 import { PDropReportExtras } from './models/postgresql/drop_report_extras'
 import { PPatternMatrixElement } from './models/postgresql/pattern_matrix_element'
+import { PTrendElement } from './models/postgresql/trend_element'
 
 async function init() {
   console.log('[Migrator] Initializing...')
@@ -39,6 +40,7 @@ async function init() {
   await PDropPatternElement.sync({ force: true })
   await PDropMatrixElement.sync({ force: true })
   await PPatternMatrixElement.sync({ force: true })
+  await PTrendElement.sync({ force: true })
   await PNotice.sync({ force: true })
   await PProperty.sync({ force: true })
   await PTimeRange.sync({ force: true })
