@@ -61,10 +61,10 @@ export const PTrendElement = sequelize.define(
         fields: ['item_id'],
       },
       {
-        fields: ['range_id'],
+        fields: ['start_time'],
       },
       {
-        fields: ['startTime'],
+        fields: ['server'],
       },
     ],
   },
