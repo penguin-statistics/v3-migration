@@ -8,15 +8,11 @@ import { cache } from '../utils/cache'
 import { PAccount } from '../models/postgresql/account'
 import { createPBar } from '../utils/pbar'
 import { PDropReportExtras } from '../models/postgresql/drop_report_extras'
+import xxhashjs from 'xxhashjs'
 
-const sha256 = (str: string): string => {
-  const h = crypto.createHash('sha256')
-  h.update(str)
-  return h.digest('hex')
-}
 interface Drop {
   quantity: number
-  itemId: string
+  itemId: number
 }
 
 const pageSize = 10000
@@ -25,7 +21,7 @@ const totalLimit = 10000000
 const dropsToHash = (drops: Drop[]) => {
   const mapped = drops.map((drop) => `${drop.itemId}:${drop.quantity}`)
   mapped.sort()
-  return sha256(mapped.join('|'))
+  return xxhashjs.h64(mapped.join('|'), 0).toString(16)
 }
 
 const dropReportMigrator: Migrator = async () => {
@@ -69,7 +65,18 @@ const dropReportMigrator: Migrator = async () => {
         continue
       }
 
-      const hash = dropsToHash(i.drops)
+      const hash = dropsToHash(
+        i.drops
+          .map((el) => {
+            const item = cache.get(`item:itemId_${el.itemId}`) as any
+            if (!item) return null
+            return {
+              itemId: item.itemId,
+              quantity: el.quantity,
+            }
+          })
+          .filter((el) => el !== null),
+      )
 
       const pattern = cache.get(`pattern:hash_${hash}`) as any
       // console.log('> pattern cache with key', `pattern:hash_${hash}`, 'returned', pattern)
@@ -105,14 +112,21 @@ const dropReportMigrator: Migrator = async () => {
 
       const ips = i.ip.split(',').map((el) => el.trim())
 
+      const reliability = (() => {
+        if (i.isDeleted) return -1
+        if (i.isReliable && !i.isDeleted) return 0
+        if (!i.isReliable && !i.isDeleted) return 1
+
+        throw new Error('this fucking world is collapsing :(')
+      })()
+
       dropReportBulk.push({
         reportId: currentIndex,
         stageId: stage.stageId,
         patternId,
         times: i.times,
         createdAt: i.timestamp,
-        deleted: i.isDeleted,
-        reliable: i.isReliable,
+        reliability: reliability,
         server: i.server,
         accountId: accountId,
       })

@@ -24,6 +24,9 @@ export const PStage = sequelize.define(
         key: 'zone_id',
       },
     },
+    extraProcessType: {
+      type: DataTypes.ENUM('GACHABOX'),
+    },
     code: {
       type: DataTypes.JSON,
       allowNull: false,

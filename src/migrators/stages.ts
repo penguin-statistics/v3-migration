@@ -29,6 +29,7 @@ const stageMigrator: Migrator = async () => {
       arkStageId: i.stageId,
       zoneId: zone.zoneId,
       code: i.codeMap,
+      extraProcessType: zone.category === 'GACHABOX' ? 'GACHABOX' : null,
       sanity: normalizeSanity(i.apCost),
       existence: i.existence,
       minClearTime: i.minClearTime,

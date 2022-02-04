@@ -24,6 +24,7 @@ export const PAccount = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {

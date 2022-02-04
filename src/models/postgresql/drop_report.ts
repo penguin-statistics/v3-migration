@@ -36,13 +36,10 @@ export const PDropReport = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
-    reliable: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    deleted: {
-      type: DataTypes.BOOLEAN,
+    reliability: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     server,
@@ -69,7 +66,7 @@ export const PDropReport = sequelize.define(
         fields: ['created_at'],
       },
       {
-        fields: ['deleted'],
+        fields: ['reliability'],
       },
       {
         fields: ['server'],

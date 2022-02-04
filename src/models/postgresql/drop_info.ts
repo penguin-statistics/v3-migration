@@ -62,6 +62,12 @@ export const PDropInfo = sequelize.define(
       {
         fields: ['range_id'],
       },
+      {
+        fields: ['item_id'],
+      },
+      {
+        fields: ['drop_type', 'item_id'],
+      },
     ],
   },
 )

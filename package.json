@@ -16,7 +16,8 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.12.0-alpha.1",
-    "tiny-async-pool": "^1.2.0"
+    "tiny-async-pool": "^1.2.0",
+    "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.0",
