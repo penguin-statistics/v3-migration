@@ -31,6 +31,8 @@ const dropReportMigrator: Migrator = async () => {
   accounts.forEach(
     (account) => (accountsMap[account.penguinId] = account.accountId),
   )
+  // maximum 2 concurrency
+  let lastOperationPromise: Promise<any> | undefined
 
   const allCount = await MItemDropModel.count()
   const shouldImportCount = Math.min(totalLimit, allCount)
@@ -47,10 +49,10 @@ const dropReportMigrator: Migrator = async () => {
     }
     // console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
 
-    let dropReportBulk = []
-    let dropReportExtraBulk = []
     for (const item of itemDrops) {
-      currentIndex += 1
+      let dropReportBulk = []
+      let dropReportExtraBulk = []
+
       const i = item.toJSON() as any
 
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
@@ -120,6 +122,8 @@ const dropReportMigrator: Migrator = async () => {
         throw new Error('this fucking world is collapsing :(')
       })()
 
+      currentIndex += 1
+
       dropReportBulk.push({
         reportId: currentIndex,
         stageId: stage.stageId,
@@ -141,15 +145,19 @@ const dropReportMigrator: Migrator = async () => {
         metadata: metadata || null,
         md5,
       })
+      if (lastOperationPromise) await lastOperationPromise
+      ;(async () => {
+        lastOperationPromise = Promise.all([
+          await PDropReport.bulkCreate(dropReportBulk),
+          await PDropReportExtras.bulkCreate(dropReportExtraBulk),
+        ])
+      })()
     }
-    await Promise.all([
-      PDropReport.bulkCreate(dropReportBulk),
-      PDropReportExtras.bulkCreate(dropReportExtraBulk),
-    ])
     finishedNum += itemDrops.length
     // console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
     BAR.tick(itemDrops.length)
   }
+  if (lastOperationPromise) await lastOperationPromise
 }
 
 export default dropReportMigrator

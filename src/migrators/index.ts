@@ -8,6 +8,7 @@ import propertyMigrator from './properties'
 import timeRangeMigrator from './time_ranges'
 import dropInfoMigrator from './drop_info'
 import accountMigrator from './accounts'
+import finalizeMigrator from './finalize'
 
 export type Migrator = () => Promise<void>
 
@@ -22,6 +23,7 @@ const migrators: Migrator[] = [
   stagesMigrator,
   dropInfoMigrator,
   dropReportMigrator,
+  finalizeMigrator,
 ]
 
 export const migrate = async () => {
