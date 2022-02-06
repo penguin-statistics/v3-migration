@@ -1,9 +1,10 @@
 import sequelize from '../utils/postgresql'
 import { Migrator } from './index'
 const finalizeMigrator: Migrator = async () => {
+  // change drop_reports since we have explicitly set the primary key
   const max = (
     (
-      await sequelize.query('SELECT MAX(report_id) FROM drop_reports')
+      await sequelize.query('SELECT MAX(report_id) + 1 FROM drop_reports')
     )[0][0] as any
   ).max
   await sequelize.query(

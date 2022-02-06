@@ -17,6 +17,8 @@ const dropInfoMigrator: Migrator = async () => {
   console.log(`[Migrator] [DropInfo] Migrating ${infos.length} records`)
   const BAR = createPBar('DropInfo', infos.length)
 
+  const queue = []
+
   for (const info of infos) {
     const i = info.toJSON() as any
 
@@ -41,9 +43,15 @@ const dropInfoMigrator: Migrator = async () => {
       bounds: i.bounds,
       accumulable: i.accumulatable != null ? i.accumulatable : false,
     }
-    await PDropInfo.create(postgresDoc)
+    queue.push(postgresDoc)
+
+    if (queue.length >= 1000) {
+      await PDropInfo.bulkCreate(queue, { returning: false })
+      queue.length = 0
+    }
     BAR.tick()
   }
+  await PDropInfo.bulkCreate(queue, { returning: false })
 }
 
 export default dropInfoMigrator

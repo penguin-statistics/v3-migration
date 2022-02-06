@@ -13,6 +13,7 @@ import { PTimeRange } from './models/postgresql/time_range'
 import { PAccount } from './models/postgresql/account'
 import { PZone } from './models/postgresql/zone'
 import sequelize from './utils/postgresql'
+import { client } from './utils/redis'
 import { PDropMatrixElement } from './models/postgresql/drop_matrix_element'
 import { PDropReportExtras } from './models/postgresql/drop_report_extras'
 import { PPatternMatrixElement } from './models/postgresql/pattern_matrix_element'
@@ -28,6 +29,13 @@ async function init() {
   console.log('[Migrator] Connecting to PostgreSQL...')
   await sequelize.authenticate()
   console.log('[Migrator] PostgreSQL Connected.')
+  console.log('[Migrator] Connecting to Redis...')
+  await client.connect()
+  await client.SELECT(2)
+  await client.FLUSHDB()
+  console.log(
+    '[Migrator] Connected to Redis DB 2 (SELECT 2) and Flushed data in such Redis DB (to avoid false indications of already-written dataset in which is actually already been deleted by a consequence of DROP DATABASE).',
+  )
 
   await PItem.sync({ force: true })
   await PZone.sync({ force: true })

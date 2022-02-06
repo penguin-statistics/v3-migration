@@ -15,9 +15,10 @@
     "mongoose": "^6.0.13",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.0.3",
     "sequelize": "^6.12.0-alpha.1",
     "tiny-async-pool": "^1.2.0",
-    "xxhashjs": "^0.2.2"
+    "xxhash": "^0.3.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.0",

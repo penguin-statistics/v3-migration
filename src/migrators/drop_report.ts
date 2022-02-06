@@ -1,14 +1,13 @@
 import { Migrator } from './index'
 import { MItemDropModel } from '../models/mongo/item_drop_v2'
-import crypto from 'crypto'
 import { PDropPattern } from '../models/postgresql/drop_pattern'
 import { PDropPatternElement } from '../models/postgresql/drop_pattern_element'
 import { PDropReport } from '../models/postgresql/drop_report'
-import { cache } from '../utils/cache'
+import { cache, redisCache } from '../utils/cache'
 import { PAccount } from '../models/postgresql/account'
 import { createPBar } from '../utils/pbar'
 import { PDropReportExtras } from '../models/postgresql/drop_report_extras'
-import xxhashjs from 'xxhashjs'
+import xxhash from 'xxhash'
 
 interface Drop {
   quantity: number
@@ -21,7 +20,8 @@ const totalLimit = 10000000
 const dropsToHash = (drops: Drop[]) => {
   const mapped = drops.map((drop) => `${drop.itemId}:${drop.quantity}`)
   mapped.sort()
-  return xxhashjs.h64(mapped.join('|'), 0).toString(16)
+  const str = mapped.join('|')
+  return xxhash.hash64(Buffer.from(str, 'utf-8'), 0, 'hex')
 }
 
 const dropReportMigrator: Migrator = async () => {
@@ -31,8 +31,8 @@ const dropReportMigrator: Migrator = async () => {
   accounts.forEach(
     (account) => (accountsMap[account.penguinId] = account.accountId),
   )
-  // maximum 2 concurrency
-  let lastOperationPromise: Promise<any> | undefined
+
+  const dbQueues = []
 
   const allCount = await MItemDropModel.count()
   const shouldImportCount = Math.min(totalLimit, allCount)
@@ -48,11 +48,10 @@ const dropReportMigrator: Migrator = async () => {
       break
     }
     // console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
+    let dropReportBulk = []
+    let dropReportExtraBulk = []
 
     for (const item of itemDrops) {
-      let dropReportBulk = []
-      let dropReportExtraBulk = []
-
       const i = item.toJSON() as any
 
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
@@ -80,8 +79,7 @@ const dropReportMigrator: Migrator = async () => {
           .filter((el) => el !== null),
       )
 
-      const pattern = cache.get(`pattern:hash_${hash}`) as any
-      // console.log('> pattern cache with key', `pattern:hash_${hash}`, 'returned', pattern)
+      const pattern = (await redisCache.get(`pattern:hash_${hash}`)) as any
 
       let patternId: number
 
@@ -92,7 +90,7 @@ const dropReportMigrator: Migrator = async () => {
 
         patternId = newPattern.patternId
 
-        cache.set(`pattern:hash_${hash}`, newPattern.toJSON())
+        await redisCache.set(`pattern:hash_${hash}`, newPattern.toJSON())
 
         const drops = i.drops
           .filter((drop: Drop) => drop.itemId && drop.quantity > 0)
@@ -109,7 +107,7 @@ const dropReportMigrator: Migrator = async () => {
           })
           .filter((drop: Drop) => drop !== null)
 
-        await PDropPatternElement.bulkCreate(drops)
+        await PDropPatternElement.bulkCreate(drops, { returning: false })
       }
 
       const ips = i.ip.split(',').map((el) => el.trim())
@@ -145,19 +143,23 @@ const dropReportMigrator: Migrator = async () => {
         metadata: metadata || null,
         md5,
       })
-      if (lastOperationPromise) await lastOperationPromise
-      ;(async () => {
-        lastOperationPromise = Promise.all([
-          await PDropReport.bulkCreate(dropReportBulk),
-          await PDropReportExtras.bulkCreate(dropReportExtraBulk),
-        ])
-      })()
     }
+    dbQueues.push(
+      Promise.all([
+        PDropReport.bulkCreate(dropReportBulk, { returning: false }),
+        PDropReportExtras.bulkCreate(dropReportExtraBulk, {
+          returning: false,
+        }),
+      ]).then(() => {
+        // discard results: we dont need that
+        return Promise.resolve()
+      }),
+    )
     finishedNum += itemDrops.length
     // console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
     BAR.tick(itemDrops.length)
   }
-  if (lastOperationPromise) await lastOperationPromise
+  await Promise.all(dbQueues)
 }
 
 export default dropReportMigrator
