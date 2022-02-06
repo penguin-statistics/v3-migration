@@ -5,7 +5,7 @@ export const PDropPattern = sequelize.define(
   'drop_pattern',
   {
     patternId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -19,8 +19,8 @@ export const PDropPattern = sequelize.define(
     underscored: true,
     indexes: [
       {
-        unique: true,
         fields: ['hash'],
+        unique: true,
       },
     ],
   },

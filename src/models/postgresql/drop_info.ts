@@ -9,7 +9,7 @@ export const PDropInfo = sequelize.define(
   'drop_info',
   {
     dropId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -31,7 +31,7 @@ export const PDropInfo = sequelize.define(
     },
     dropType,
     rangeId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PTimeRange,

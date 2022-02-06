@@ -13,7 +13,6 @@ export const PItem = sequelize.define(
     arkItemId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      unique: true,
     },
     existence,
     /** name: I18nMap */
@@ -52,7 +51,6 @@ export const PItem = sequelize.define(
       },
       {
         fields: ['group'],
-        using: 'hash',
       },
     ],
   },

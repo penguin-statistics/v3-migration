@@ -7,12 +7,12 @@ export const PDropPatternElement = sequelize.define(
   'drop_pattern_element',
   {
     elementId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
     dropPatternId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PDropPattern,

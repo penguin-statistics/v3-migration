@@ -9,7 +9,7 @@ export const PPatternMatrixElement = sequelize.define(
   'pattern_matrix_element',
   {
     elementId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -22,7 +22,7 @@ export const PPatternMatrixElement = sequelize.define(
       },
     },
     patternId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PDropPattern,
@@ -30,7 +30,7 @@ export const PPatternMatrixElement = sequelize.define(
       },
     },
     rangeId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PTimeRange,

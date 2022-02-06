@@ -9,7 +9,7 @@ export const PDropReport = sequelize.define(
   'drop_report',
   {
     reportId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -22,7 +22,7 @@ export const PDropReport = sequelize.define(
       },
     },
     patternId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PDropPattern,
@@ -44,7 +44,7 @@ export const PDropReport = sequelize.define(
     },
     server,
     accountId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: PAccount,

@@ -5,7 +5,7 @@ export const PAccount = sequelize.define(
   'account',
   {
     accountId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },

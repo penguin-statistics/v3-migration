@@ -8,7 +8,7 @@ export const PTrendElement = sequelize.define(
   'trend_element',
   {
     elementId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },

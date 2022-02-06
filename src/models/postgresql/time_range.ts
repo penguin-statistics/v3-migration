@@ -6,7 +6,7 @@ export const PTimeRange = sequelize.define(
   'time_range',
   {
     rangeId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },

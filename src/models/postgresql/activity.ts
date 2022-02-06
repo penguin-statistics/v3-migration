@@ -6,7 +6,7 @@ export const PActivity = sequelize.define(
   'activity',
   {
     activityId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
