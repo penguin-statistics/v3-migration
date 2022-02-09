@@ -28,7 +28,7 @@ export const PStage = sequelize.define(
       type: DataTypes.ENUM('GACHABOX'),
     },
     code: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
     sanity: {

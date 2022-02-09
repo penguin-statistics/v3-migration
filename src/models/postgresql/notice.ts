@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../../utils/postgresql'
+import { existence } from './common'
 
 export const PNotice = sequelize.define(
   'notice',
@@ -9,14 +10,14 @@ export const PNotice = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    conditions: {
-      type: DataTypes.JSON,
+    existence: {
+      type: DataTypes.JSONB,
     },
     severity: {
       type: DataTypes.INTEGER,
     },
     content: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
   },

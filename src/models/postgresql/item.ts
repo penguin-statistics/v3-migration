@@ -17,7 +17,7 @@ export const PItem = sequelize.define(
     existence,
     /** name: I18nMap */
     name: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
     sortId: {
@@ -38,7 +38,7 @@ export const PItem = sequelize.define(
       type: DataTypes.STRING(16),
     },
     keywords: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
   },

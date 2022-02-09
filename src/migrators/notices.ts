@@ -10,7 +10,7 @@ const noticeMigrator: Migrator = async () => {
   for (const notice of notices) {
     const i = notice.toJSON() as any
     const postgresDoc = {
-      conditions: i.conditions,
+      existence: i.existence,
       severity: i.severity,
       content: i.contentMap,
     }

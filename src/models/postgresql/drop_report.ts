@@ -11,7 +11,7 @@ export const PDropReport = sequelize.define(
     reportId: {
       type: DataTypes.BIGINT,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
     },
     stageId: {
       type: DataTypes.INTEGER,
@@ -36,7 +36,6 @@ export const PDropReport = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
     reliability: {
       type: DataTypes.INTEGER,

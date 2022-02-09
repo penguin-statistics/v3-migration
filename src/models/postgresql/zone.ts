@@ -27,7 +27,7 @@ export const PZone = sequelize.define(
       type: DataTypes.STRING(64),
     },
     name: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
     existence,
