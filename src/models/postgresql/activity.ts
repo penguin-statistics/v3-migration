@@ -16,6 +16,7 @@ export const PActivity = sequelize.define(
     },
     endTime: {
       type: DataTypes.DATE,
+      allowNull: false,
     },
     name: {
       type: DataTypes.JSONB,

@@ -11,7 +11,7 @@ const activityMigrator: Migrator = async () => {
     const i = eventPeriod.toJSON() as any
     const postgresDoc = {
       startTime: i.start,
-      endTime: i.end,
+      endTime: i.end ?? 62141368179000,
       name: i.labelMap,
       existence: i.existence,
     }
