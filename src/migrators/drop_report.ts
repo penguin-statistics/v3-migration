@@ -57,7 +57,7 @@ const dropReportMigrator: Migrator = async () => {
       // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
 
       const stage = cache.get(`stage:stageId_${i.stageId}`) as any
-      if (!stage || !i.server || !i.isReliable || !i.userID) {
+      if (!stage || !i.server || !i.userID) {
         continue
       }
 
@@ -69,14 +69,14 @@ const dropReportMigrator: Migrator = async () => {
       const hash = dropsToHash(
         i.drops
           .map((el) => {
-            const item = cache.get(`item:itemId_${el.itemId}`) as any
-            if (!item) return null
+            const itemFromCache = cache.get(`item:itemId_${el.itemId}`) as any
+            if (!itemFromCache) return null
             return {
-              itemId: item.itemId,
+              itemId: itemFromCache.itemId,
               quantity: el.quantity,
             }
           })
-          .filter((el) => el !== null),
+          .filter((el) => el !== null && el.quantity > 0),
       )
 
       const pattern = (await redisCache.get(`pattern:hash_${hash}`)) as any
