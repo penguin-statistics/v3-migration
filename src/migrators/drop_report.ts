@@ -14,7 +14,7 @@ interface Drop {
   itemId: number
 }
 
-const dropsToHash = async (drops: Drop[]) => {
+const dropsToHash = (drops: Drop[]) => {
   const mapped = drops.map((drop) => `${drop.itemId}:${drop.quantity}`)
   mapped.sort()
   const str = mapped.join('|')
