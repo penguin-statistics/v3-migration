@@ -28,6 +28,7 @@ const stageMigrator: Migrator = async () => {
     const postgresDoc = {
       arkStageId: i.stageId,
       zoneId: zone.zoneId,
+      stageType: i.stageType,
       code: i.codeMap,
       extraProcessType: zone.category === 'GACHABOX' ? 'GACHABOX' : null,
       sanity: normalizeSanity(i.apCost),

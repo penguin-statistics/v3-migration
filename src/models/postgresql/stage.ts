@@ -16,6 +16,9 @@ export const PStage = sequelize.define(
       allowNull: false,
       unique: true,
     },
+    stageType: {
+      type: DataTypes.ENUM('MAIN', 'SUB', 'ACTIVITY', 'DAILY'),
+    },
     zoneId: {
       type: DataTypes.INTEGER,
       allowNull: false,
