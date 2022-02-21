@@ -18,7 +18,6 @@ import { PDropMatrixElement } from './models/postgresql/drop_matrix_element'
 import { PDropReportExtras } from './models/postgresql/drop_report_extras'
 import { PPatternMatrixElement } from './models/postgresql/pattern_matrix_element'
 import { PTrendElement } from './models/postgresql/trend_element'
-import { MItemDropModel } from './models/mongo/item_drop_v2'
 
 async function init() {
   console.log('[Migrator] Initializing...')

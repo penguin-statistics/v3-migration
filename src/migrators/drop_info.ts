@@ -42,6 +42,8 @@ const dropInfoMigrator: Migrator = async () => {
       rangeId: timeRange.rangeId,
       bounds: i.bounds,
       accumulable: i.accumulatable != null ? i.accumulatable : false,
+      extras:
+        i.dropType === 'RECOGNITION_ONLY' ? { arkItemId: i.itemId } : null,
     }
     queue.push(postgresDoc)
 

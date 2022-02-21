@@ -45,6 +45,9 @@ export const PDropInfo = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    extras: {
+      type: DataTypes.JSONB,
+    },
   },
   {
     timestamps: false,
