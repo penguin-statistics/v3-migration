@@ -54,25 +54,6 @@ async function init() {
   await PTimeRange.sync({ force: true })
   await PDropInfo.sync({ force: true })
 
-  // const itemDrops = await MItemDropModel.find(
-  //   {
-  //     screenshotMetadata: { $exists: true },
-  //   },
-  //   null,
-  //   { strict: false },
-  // )
-  //   .limit(1)
-  //   .exec()
-
-  // for (const itemDrop of itemDrops) {
-  //   const itemO = itemDrop.toObject() as any
-  //   const itemJ = itemDrop.toJSON() as any
-  //   console.log('object', itemO.server, '|', itemO.screenshotMetadata)
-  //   console.log('json', '|', itemJ.server, '|', itemJ.screenshotMetadata)
-  //   const { md5, ...metadata } = (itemO as any).screenshotMetadata || {}
-  //   console.log(md5, metadata)
-  // }
-
   await migrate()
 
   process.exit(0)

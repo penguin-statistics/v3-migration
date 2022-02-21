@@ -7,18 +7,32 @@ import { cache, redisCache } from '../utils/cache'
 import { PAccount } from '../models/postgresql/account'
 import { createPBar } from '../utils/pbar'
 import { PDropReportExtras } from '../models/postgresql/drop_report_extras'
-import xxhash from 'xxhash'
+import { XXHash3 } from 'xxhash-addon'
+
+const hasher = new XXHash3(0)
 
 interface Drop {
   quantity: number
   itemId: number
 }
 
-const dropsToHash = (drops: Drop[]) => {
+const PAGE_SIZE = 5000
+
+const HASH_CACHE = new Map()
+
+export const dropsToHash = (drops: Drop[]) => {
   const mapped = drops.map((drop) => `${drop.itemId}:${drop.quantity}`)
   mapped.sort()
   const str = mapped.join('|')
-  return [xxhash.hash64(Buffer.from(str, 'utf-8'), 0, 'hex'), str]
+  const got = HASH_CACHE.get(str)
+  if (got) {
+    return [got, str]
+  }
+  hasher.update(Buffer.from(str, 'utf-8'))
+  const hash = hasher.digest().toString('hex')
+  HASH_CACHE.set(str, hash)
+  hasher.reset()
+  return [hash, str]
 }
 
 const dropReportMigrator: Migrator = async () => {
@@ -34,7 +48,7 @@ const dropReportMigrator: Migrator = async () => {
   const allCount = await MItemDropModel.count()
   const BAR = createPBar('DropReport', allCount)
   let currentIndex = 0
-  const cursor = MItemDropModel.find({}).cursor({ batchSize: 5000 })
+  const cursor = MItemDropModel.find({}).cursor({ batchSize: PAGE_SIZE })
   let dropReportBulk = []
   let dropReportExtraBulk = []
   for (
@@ -53,18 +67,33 @@ const dropReportMigrator: Migrator = async () => {
       continue
     }
 
-    const [hash, hashOriginal] = dropsToHash(
-      i.drops
-        .map((el) => {
-          const itemFromCache = cache.get(`item:itemId_${el.itemId}`) as any
-          if (!itemFromCache) return null
-          return {
-            itemId: itemFromCache.itemId,
-            quantity: el.quantity,
-          }
-        })
-        .filter((el) => el !== null && el.quantity > 0),
-    )
+    const drops = i.drops
+      .map((el) => {
+        const itemFromCache = cache.get(`item:itemId_${el.itemId}`) as any
+        if (!itemFromCache) return null
+        return {
+          itemId: itemFromCache.itemId,
+          quantity: el.quantity,
+        }
+      })
+      .filter((el) => el !== null && el.quantity > 0)
+
+    // group by item id and sum quantity
+    const groupedDrops = drops.reduce((acc, cur) => {
+      const itemId = cur.itemId
+      const quantity = cur.quantity
+      if (!acc[itemId]) {
+        acc[itemId] = {
+          itemId,
+          quantity,
+        }
+      } else {
+        acc[itemId].quantity += quantity
+      }
+      return acc
+    }, {})
+
+    const [hash, hashOriginal] = dropsToHash(Object.values(groupedDrops))
 
     const pattern = (await redisCache.get(`pattern:hash_${hash}`)) as any
 
@@ -134,7 +163,7 @@ const dropReportMigrator: Migrator = async () => {
       md5: i.screenshotMetadata ? md5 : null,
     })
 
-    if (dropReportBulk.length % 5000 === 0 || currentIndex >= allCount) {
+    if (dropReportBulk.length % PAGE_SIZE === 0 || currentIndex >= allCount) {
       dbQueues.push(
         Promise.all([
           PDropReport.bulkCreate(dropReportBulk, { returning: false }),
@@ -154,6 +183,7 @@ const dropReportMigrator: Migrator = async () => {
     }
   }
   await Promise.all(dbQueues)
+  console.log('\n')
 }
 
 export default dropReportMigrator
