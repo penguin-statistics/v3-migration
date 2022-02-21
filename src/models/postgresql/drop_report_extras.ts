@@ -38,6 +38,9 @@ export const PDropReportExtras = sequelize.define(
       {
         fields: ['version'],
       },
+      {
+        fields: ['md5'],
+      },
     ],
   },
 )

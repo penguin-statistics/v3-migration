@@ -8,7 +8,7 @@ const activityMigrator: Migrator = async () => {
   console.log(`[Migrator] [Activity] Migrating ${eventPeriods.length} records`)
 
   for (const eventPeriod of eventPeriods) {
-    const i = eventPeriod.toJSON() as any
+    const i = eventPeriod.toObject() as any
     const postgresDoc = {
       startTime: i.start,
       endTime: i.end ?? 62141368179000,

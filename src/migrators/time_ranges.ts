@@ -12,7 +12,7 @@ const timeRangeMigrator: Migrator = async () => {
   const BAR = createPBar('TimeRange', ranges.length)
 
   for (const range of ranges) {
-    const i = range.toJSON() as any
+    const i = range.toObject() as any
     let server
     if (i.rangeID.endsWith('_CN')) {
       server = 'CN'

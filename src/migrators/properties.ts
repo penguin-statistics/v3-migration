@@ -8,7 +8,7 @@ const propertyMigrator: Migrator = async () => {
   console.log(`[Migrator] [Properties] Migrating ${properties.length} records`)
 
   for (const property of properties) {
-    const i = property.toJSON() as any
+    const i = property.toObject() as any
     const postgresDoc = {
       key: i.key,
       value: i.value,

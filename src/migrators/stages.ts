@@ -17,7 +17,7 @@ const stageMigrator: Migrator = async () => {
   const BAR = createPBar('Stage', stages.length)
 
   for (const stage of stages) {
-    const i = stage.toJSON() as any
+    const i = stage.toObject() as any
 
     const zone = (await PZone.findOne({
       where: {

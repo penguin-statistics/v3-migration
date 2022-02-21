@@ -8,7 +8,7 @@ const noticeMigrator: Migrator = async () => {
   console.log(`[Migrator] [Notice] Migrating ${notices.length} records`)
 
   for (const notice of notices) {
-    const i = notice.toJSON() as any
+    const i = notice.toObject() as any
     const postgresDoc = {
       existence: i.existence,
       severity: i.severity,

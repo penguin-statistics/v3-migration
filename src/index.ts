@@ -18,6 +18,7 @@ import { PDropMatrixElement } from './models/postgresql/drop_matrix_element'
 import { PDropReportExtras } from './models/postgresql/drop_report_extras'
 import { PPatternMatrixElement } from './models/postgresql/pattern_matrix_element'
 import { PTrendElement } from './models/postgresql/trend_element'
+import { MItemDropModel } from './models/mongo/item_drop_v2'
 
 async function init() {
   console.log('[Migrator] Initializing...')
@@ -53,6 +54,25 @@ async function init() {
   await PProperty.sync({ force: true })
   await PTimeRange.sync({ force: true })
   await PDropInfo.sync({ force: true })
+
+  // const itemDrops = await MItemDropModel.find(
+  //   {
+  //     screenshotMetadata: { $exists: true },
+  //   },
+  //   null,
+  //   { strict: false },
+  // )
+  //   .limit(1)
+  //   .exec()
+
+  // for (const itemDrop of itemDrops) {
+  //   const itemO = itemDrop.toObject() as any
+  //   const itemJ = itemDrop.toJSON() as any
+  //   console.log('object', itemO.server, '|', itemO.screenshotMetadata)
+  //   console.log('json', '|', itemJ.server, '|', itemJ.screenshotMetadata)
+  //   const { md5, ...metadata } = (itemO as any).screenshotMetadata || {}
+  //   console.log(md5, metadata)
+  // }
 
   await migrate()
 

@@ -20,7 +20,7 @@ const dropInfoMigrator: Migrator = async () => {
   const queue = []
 
   for (const info of infos) {
-    const i = info.toJSON() as any
+    const i = info.toObject() as any
 
     const stage = cache.get(`stage:stageId_${i.stageId}`) as any
     const item = i.itemId ? cache.get(`item:itemId_${i.itemId}`) : (null as any)

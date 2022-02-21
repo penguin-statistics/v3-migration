@@ -12,7 +12,7 @@ const accountMigrator: Migrator = async () => {
 
   let filteredAccounts = accounts
     .map((account) => {
-      const i = account.toJSON() as any
+      const i = account.toObject() as any
       BAR.tick()
       if (i.userID === 'spring-test') {
         return null

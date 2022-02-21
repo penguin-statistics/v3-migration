@@ -10,7 +10,7 @@ const zoneMigrator: Migrator = async () => {
   const BAR = createPBar('Zone', zones.length)
 
   for (const zone of zones) {
-    const i = zone.toJSON() as any
+    const i = zone.toObject() as any
     const postgresDoc = {
       arkZoneId: i.zoneId,
       index: i.zoneIndex,

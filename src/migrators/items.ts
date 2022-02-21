@@ -11,7 +11,7 @@ const itemMigrator: Migrator = async () => {
   const BAR = createPBar('Item', items.length)
 
   for (const item of items) {
-    const i = item.toJSON() as any
+    const i = item.toObject() as any
     const postgresDoc = {
       arkItemId: i.itemId,
       existence: i.existence,

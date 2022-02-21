@@ -14,14 +14,11 @@ interface Drop {
   itemId: number
 }
 
-const pageSize = 10000
-const totalLimit = 10000000
-
-const dropsToHash = (drops: Drop[]) => {
+const dropsToHash = async (drops: Drop[]) => {
   const mapped = drops.map((drop) => `${drop.itemId}:${drop.quantity}`)
   mapped.sort()
   const str = mapped.join('|')
-  return xxhash.hash64(Buffer.from(str, 'utf-8'), 0, 'hex')
+  return [xxhash.hash64(Buffer.from(str, 'utf-8'), 0, 'hex'), str]
 }
 
 const dropReportMigrator: Migrator = async () => {
@@ -35,129 +32,126 @@ const dropReportMigrator: Migrator = async () => {
   const dbQueues = []
 
   const allCount = await MItemDropModel.count()
-  const shouldImportCount = Math.min(totalLimit, allCount)
-  const BAR = createPBar('DropReport', shouldImportCount)
-  let finishedNum = 0
+  const BAR = createPBar('DropReport', allCount)
   let currentIndex = 0
-  while (finishedNum < totalLimit) {
-    const itemDrops = await MItemDropModel.find({})
-      .skip(finishedNum)
-      .limit(Math.min(pageSize, shouldImportCount - finishedNum))
-      .exec()
-    if (itemDrops.length === 0) {
-      break
+  const cursor = MItemDropModel.find({}).cursor({ batchSize: 5000 })
+  let dropReportBulk = []
+  let dropReportExtraBulk = []
+  for (
+    let item = await cursor.next();
+    item != null;
+    item = await cursor.next()
+  ) {
+    const i = item.toObject() as any
+    const stage = cache.get(`stage:stageId_${i.stageId}`) as any
+    if (!stage || !i.server || !i.userID) {
+      continue
     }
-    // console.log(`[Migrator] [DropReport] Migrating ${finishedNum}/${shouldImportCount} records`)
-    let dropReportBulk = []
-    let dropReportExtraBulk = []
 
-    for (const item of itemDrops) {
-      const i = item.toJSON() as any
+    const accountId = accountsMap[i.userID]
+    if (!accountId) {
+      continue
+    }
 
-      // console.log(`  - [Migrator] [DropReport] Migrating ${i._id}`)
+    const [hash, hashOriginal] = dropsToHash(
+      i.drops
+        .map((el) => {
+          const itemFromCache = cache.get(`item:itemId_${el.itemId}`) as any
+          if (!itemFromCache) return null
+          return {
+            itemId: itemFromCache.itemId,
+            quantity: el.quantity,
+          }
+        })
+        .filter((el) => el !== null && el.quantity > 0),
+    )
 
-      const stage = cache.get(`stage:stageId_${i.stageId}`) as any
-      if (!stage || !i.server || !i.userID) {
-        continue
-      }
+    const pattern = (await redisCache.get(`pattern:hash_${hash}`)) as any
 
-      const accountId = accountsMap[i.userID]
-      if (!accountId) {
-        continue
-      }
+    let patternId: number
 
-      const hash = dropsToHash(
-        i.drops
-          .map((el) => {
-            const itemFromCache = cache.get(`item:itemId_${el.itemId}`) as any
-            if (!itemFromCache) return null
-            return {
-              itemId: itemFromCache.itemId,
-              quantity: el.quantity,
-            }
-          })
-          .filter((el) => el !== null && el.quantity > 0),
+    if (pattern) {
+      patternId = pattern.patternId
+    } else {
+      const newPattern = (await PDropPattern.create({
+        hash,
+        originalFingerprint: hashOriginal,
+      })) as any
+
+      patternId = newPattern.patternId
+
+      await redisCache.set(`pattern:hash_${hash}`, newPattern.toJSON())
+
+      const drops = i.drops
+        .filter((drop: Drop) => drop.itemId && drop.quantity > 0)
+        .map((drop: Drop) => {
+          const item = cache.get(`item:itemId_${drop.itemId}`) as any
+          if (!item) {
+            return null
+          }
+          return {
+            itemId: item.itemId,
+            quantity: drop.quantity,
+            dropPatternId: patternId,
+          }
+        })
+        .filter((drop: Drop) => drop !== null)
+
+      await PDropPatternElement.bulkCreate(drops, { returning: false })
+    }
+
+    const ips = i.ip.split(',').map((el) => el.trim())
+
+    const reliability = (() => {
+      if (i.isDeleted) return -1
+      if (i.isReliable && !i.isDeleted) return 0
+      if (!i.isReliable && !i.isDeleted) return 1
+
+      throw new Error('this fucking world is collapsing :(')
+    })()
+
+    currentIndex += 1
+
+    dropReportBulk.push({
+      reportId: currentIndex,
+      stageId: stage.stageId,
+      patternId,
+      times: i.times,
+      createdAt: i.timestamp,
+      reliability: reliability,
+      server: i.server,
+      accountId: accountId,
+    })
+
+    const { md5, ...metadata } = i.screenshotMetadata || {}
+
+    dropReportExtraBulk.push({
+      reportId: currentIndex,
+      sourceName: i.source,
+      version: i.version,
+      ip: ips[0],
+      metadata: i.screenshotMetadata ? metadata : null,
+      md5: i.screenshotMetadata ? md5 : null,
+    })
+
+    if (dropReportBulk.length % 5000 === 0 || currentIndex >= allCount) {
+      dbQueues.push(
+        Promise.all([
+          PDropReport.bulkCreate(dropReportBulk, { returning: false }),
+          PDropReportExtras.bulkCreate(dropReportExtraBulk, {
+            returning: false,
+          }),
+        ]).then(() => {
+          // discard results: we dont need that
+          return Promise.resolve()
+        }),
       )
 
-      const pattern = (await redisCache.get(`pattern:hash_${hash}`)) as any
+      BAR.tick(dropReportBulk.length)
 
-      let patternId: number
-
-      if (pattern) {
-        patternId = pattern.patternId
-      } else {
-        const newPattern = (await PDropPattern.create({ hash })) as any
-
-        patternId = newPattern.patternId
-
-        await redisCache.set(`pattern:hash_${hash}`, newPattern.toJSON())
-
-        const drops = i.drops
-          .filter((drop: Drop) => drop.itemId && drop.quantity > 0)
-          .map((drop: Drop) => {
-            const item = cache.get(`item:itemId_${drop.itemId}`) as any
-            if (!item) {
-              return null
-            }
-            return {
-              itemId: item.itemId,
-              quantity: drop.quantity,
-              dropPatternId: patternId,
-            }
-          })
-          .filter((drop: Drop) => drop !== null)
-
-        await PDropPatternElement.bulkCreate(drops, { returning: false })
-      }
-
-      const ips = i.ip.split(',').map((el) => el.trim())
-
-      const reliability = (() => {
-        if (i.isDeleted) return -1
-        if (i.isReliable && !i.isDeleted) return 0
-        if (!i.isReliable && !i.isDeleted) return 1
-
-        throw new Error('this fucking world is collapsing :(')
-      })()
-
-      currentIndex += 1
-
-      dropReportBulk.push({
-        reportId: currentIndex,
-        stageId: stage.stageId,
-        patternId,
-        times: i.times,
-        createdAt: i.timestamp,
-        reliability: reliability,
-        server: i.server,
-        accountId: accountId,
-      })
-
-      const { md5, ...metadata } = i.screenshotMetadata || {}
-
-      dropReportExtraBulk.push({
-        reportId: currentIndex,
-        sourceName: i.source,
-        version: i.version,
-        ip: ips[0],
-        metadata: metadata || null,
-        md5,
-      })
+      dropReportBulk = []
+      dropReportExtraBulk = []
     }
-    dbQueues.push(
-      Promise.all([
-        PDropReport.bulkCreate(dropReportBulk, { returning: false }),
-        PDropReportExtras.bulkCreate(dropReportExtraBulk, {
-          returning: false,
-        }),
-      ]).then(() => {
-        // discard results: we dont need that
-        return Promise.resolve()
-      }),
-    )
-    finishedNum += itemDrops.length
-    // console.log(`[Migrator] [DropReport] Migrated ${oneBulk.length}/${itemDrops.length} records in this page.`)
-    BAR.tick(itemDrops.length)
   }
   await Promise.all(dbQueues)
 }

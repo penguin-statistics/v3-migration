@@ -13,6 +13,9 @@ export const PDropPattern = sequelize.define(
       type: DataTypes.STRING(64),
       allowNull: false,
     },
+    originalFingerprint: {
+      type: DataTypes.TEXT,
+    },
   },
   {
     timestamps: false,
@@ -21,6 +24,9 @@ export const PDropPattern = sequelize.define(
       {
         fields: ['hash'],
         unique: true,
+      },
+      {
+        fields: ['original_fingerprint'],
       },
     ],
   },
