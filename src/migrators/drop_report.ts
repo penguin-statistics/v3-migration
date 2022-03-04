@@ -16,7 +16,7 @@ interface Drop {
   itemId: number
 }
 
-const PAGE_SIZE = 1
+const PAGE_SIZE = 5000
 
 const HASH_CACHE = new Map()
 
