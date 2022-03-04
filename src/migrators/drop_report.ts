@@ -16,7 +16,7 @@ interface Drop {
   itemId: number
 }
 
-const PAGE_SIZE = 5000
+const PAGE_SIZE = 1
 
 const HASH_CACHE = new Map()
 
@@ -47,15 +47,18 @@ const dropReportMigrator: Migrator = async () => {
 
   const allCount = await MItemDropModel.count()
   const BAR = createPBar('DropReport', allCount)
+  let finishedNum = 0
   let currentIndex = 0
   const cursor = MItemDropModel.find({}).cursor({ batchSize: PAGE_SIZE })
   let dropReportBulk = []
   let dropReportExtraBulk = []
+
   for (
     let item = await cursor.next();
     item != null;
     item = await cursor.next()
   ) {
+    finishedNum += 1
     const i = item.toObject() as any
     const stage = cache.get(`stage:stageId_${i.stageId}`) as any
     if (!stage || !i.server || !i.userID) {
@@ -163,7 +166,7 @@ const dropReportMigrator: Migrator = async () => {
       md5: i.screenshotMetadata ? md5 : null,
     })
 
-    if (dropReportBulk.length % PAGE_SIZE === 0 || currentIndex >= allCount) {
+    if (dropReportBulk.length % PAGE_SIZE === 0 || finishedNum >= allCount) {
       dbQueues.push(
         Promise.all([
           PDropReport.bulkCreate(dropReportBulk, { returning: false }),
